@@ -1,0 +1,139 @@
+<div *ngIf="movie">
+  <div class="movie-backdrop" [ngStyle]="{ 'background-image': 'url(' + movie.backdrop + ')' }"></div>
+  <div class="container">
+    <div class="movie-data row">
+      <div class="col-md-4">
+        <div class="movie-poster">
+          <img class="img-fluid" src="{{ movie.poster }}" alt="{{ movie.title }}" />
+          <a href="javascript:void(0)" class="movie-play-trailer" (click)="openModal(preview)"></a>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <h2 class="movie-title">{{ movie.title }}</h2>
+        <div class="movie-info">
+          <p class="movie-overview">{{ movie.overview }}</p>
+          <div class="movie-meta">
+            <dl class="movie meta-director">
+              <dt>Director:</dt>
+              <dd>{{ movie.director }}</dd>
+            </dl>
+            <dl class="movie-meta-cast">
+              <dt>Protagonistas:</dt>
+              <dd>{{ movie.cast | join: ", " }}</dd>
+            </dl>
+            <dl class="movie-meta-runtime">
+              <dt>Duracion:</dt>
+              <dd>{{ movie.runtime | minute }}</dd>
+            </dl>
+          </div>
+
+          <app-showtimes
+            [movie]="movie"
+            [showAllTimes]="showAllTimes"
+            [filterDate]="'all'"
+            (click)="openModal(template)"
+          ></app-showtimes>
+
+          <ng-template #template1>
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Informacion de pago</h4>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-text">Pague en efecty $7.000 con el numero de referencia 253478 </h3>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" (click)="modalRef.hide()">Close</button>
+            </div>
+          </ng-template>
+
+
+          <ng-template #template>
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Modal</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h3 class="modal-text">Seleccione los datos de su ticket</h3>
+              <div class="row">
+                <div class="column">
+                  <select class="select" aria-label="Default select example">
+                    <option selected>Seleccione Sede</option>
+                    <option value="1">Sur</option>
+                    <option value="2">Norte</option>
+                    <option value="3">Oriente</option>
+                    <option value="3">Occidente</option>
+                  </select>
+                </div>
+                <div class="column">
+                  <select class="select" aria-label="Default select example">
+                    <option selected>Seleccione Fila</option>
+                    <option value="1">A</option>
+                    <option value="2">B</option>
+                    <option value="3">C</option>
+                    <option value="3">D</option>
+                    <option value="1">E</option>
+                    <option value="2">F</option>
+                    <option value="3">G</option>
+                    <option value="3">H</option>
+                  </select>
+                </div>
+                <div class="column">
+                  <select class="select" aria-label="Default select example">
+                    <option selected>Seleccione Columna</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="3">4</option>
+                    <option value="1">5</option>
+                    <option value="2">6</option>
+                    <option value="3">7</option>
+                    <option value="3">8</option>
+                    <option value="1">9</option>
+                    <option value="2">10</option>
+                    <option value="3">11</option>
+                    <option value="3">12</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" (click)="modalRef.hide()" (click)="openModal(template1)">Enviar</button>
+            </div>
+          </ng-template>
+
+          <a
+            href="javascript:void(0)"
+            class="movie-more-showtime"
+            (click)="showAllShowtimes()"
+            *ngIf="!showAllTimes"
+            >Mostrar toda la programacion</a>
+          <a
+            href="javascript:void(0)"
+            class="movie-today-showtime"
+            (click)="hideAllShowtimes()"
+            *ngIf="showAllTimes"
+            >Ocultar toda la programacion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <h2 class="my-4">En cartelera</h2>
+  <app-movies-grid limit="4" columns="4" exclude="movie.id"></app-movies-grid>
+</div>
+
+<ng-template #preview>
+  <div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- 16:9 aspect ratio -->
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item"  [src]="getPreviewUrl()" allowscriptaccess="always"></iframe>
+    </div>
+  </div>
+</ng-template>
